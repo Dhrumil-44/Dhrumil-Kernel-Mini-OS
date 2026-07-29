@@ -1,0 +1,20 @@
+# STM32CubeIDE build output
+Debug/
+Release/
+Build/
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+*.launch.bak
+
+# Eclipse/CDT index & metadata that shouldn't be versioned
+.metadata/
+.recommenders/
+
+# OS cruft
+.DS_Store
+Thumbs.db
