@@ -1,4 +1,4 @@
-# Dhrumil Kernel — Mini OS for STM32F4
+#Kernel Mini OS for STM32F4
 
 A small, cooperative, statically-allocated real-time kernel written from scratch for the STM32 Nucleo-F446RE (Cortex-M4). It implements task scheduling, context switching via `PendSV`, a lock-free-style message queue, and a binary event flag — all without any dynamic memory allocation.
 
