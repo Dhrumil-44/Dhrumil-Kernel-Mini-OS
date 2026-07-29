@@ -1,6 +1,6 @@
 #Kernel Mini OS for STM32F4
 
-A small, cooperative, statically-allocated real-time kernel written from scratch for the STM32 Nucleo-F446RE (Cortex-M4). It implements task scheduling, context switching via `PendSV`, a lock-free-style message queue, and a binary event flag — all without any dynamic memory allocation.
+A small, cooperative, statically-allocated real-time kernel written from scratch for the STM32 Nucleo-F446RE (Cortex-M4). It implements task scheduling, context switching via `PendSV`, a lock-free-style message queue, and a binary event flag - all without any dynamic memory allocation.
 
 Built as a firmware assignment for Bytebeam, and used as a hands-on exercise in kernel internals: TCB design, stack frame construction for `PendSV` context switches, ISR-safe primitives, and cooperative scheduling trade-offs.
 
@@ -69,13 +69,13 @@ python3 monitor.py
 
 The OS is structured in three layers:
 
-1. **Hardware layer** — the `SysTick` timer fires every 1 ms and calls `os_tick()`, which increments the OS tick counter and wakes any sleeping tasks whose wake time has arrived.
-2. **Kernel layer** — the scheduler and two primitives (message queue and event flag) live in `Core/OS/`. All kernel state is statically allocated; no dynamic memory is used anywhere in the OS.
-3. **Application layer** — six demo tasks in `main.c` exercise the scheduler and both primitives.
+1. **Hardware layer** - the `SysTick` timer fires every 1 ms and calls `os_tick()`, which increments the OS tick counter and wakes any sleeping tasks whose wake time has arrived.
+2. **Kernel layer** - the scheduler and two primitives (message queue and event flag) live in `Core/OS/`. All kernel state is statically allocated; no dynamic memory is used anywhere in the OS.
+3. **Application layer** - six demo tasks in `main.c` exercise the scheduler and both primitives.
 
 ## Scheduler Model
 
-This is a **cooperative round-robin scheduler**. Tasks are stored in a static Task Control Block (TCB) array with a maximum of 8 slots. The scheduler loop finds the next `READY` task and context-switches into it via `PendSV`. Tasks voluntarily give up the CPU by calling `os_sleep_ms()` or `os_yield()` — no task is ever forcibly preempted.
+This is a **cooperative round-robin scheduler**. Tasks are stored in a static Task Control Block (TCB) array with a maximum of 8 slots. The scheduler loop finds the next `READY` task and context-switches into it via `PendSV`. Tasks voluntarily give up the CPU by calling `os_sleep_ms()` or `os_yield()` - no task is ever forcibly preempted.
 
 When all tasks are sleeping or blocked, the CPU executes `__WFI` (Wait For Interrupt) to save power until the next `SysTick` fires.
 
@@ -90,7 +90,7 @@ When all tasks are sleeping or blocked, the CPU executes `__WFI` (Wait For Inter
 
 ## Kernel Primitives
 
-### Message Queue — `os_queue.h` / `os_queue.c`
+### Message Queue - `os_queue.h` / `os_queue.c`
 
 A fixed-size ring buffer holding up to 8 messages of 16 bytes each. Safe to call from both task and ISR context using `__disable_irq()` / `__enable_irq()` critical sections.
 
@@ -104,9 +104,9 @@ A fixed-size ring buffer holding up to 8 messages of 16 bytes each. Safe to call
 
 Both send and receive are non-blocking, and IRQs are disabled during the critical section on each.
 
-### Event Flag — `os_event.h` / `os_event.c`
+### Event Flag - `os_event.h` / `os_event.c`
 
-A binary event primitive that lets a task block until signaled by another task or ISR.
+A binary event primitive that lets a task block until signalled by another task or an ISR.
 
 | Function | Description |
 |---|---|
@@ -122,11 +122,11 @@ If a signal arrives before a wait, the flag is latched and consumed on the next 
 
 ```
 os_init()                    initialise kernel state
-os_task_create(func, name)   register a task by function pointer
+os_task_create(func, name)   registers a task by function pointer
 os_start()                   start scheduler, never returns
-os_yield()                   give up CPU voluntarily
-os_sleep_ms(ms)               block current task for N milliseconds
-os_now_ms()                   return monotonic millisecond counter
+os_yield()                   gives up the CPU voluntarily
+os_sleep_ms(ms)               blocks the current task for N milliseconds
+os_now_ms()                   returns the monotonic millisecond counter
 os_tick()                     called from SysTick_Handler every 1ms
 ```
 
@@ -192,7 +192,7 @@ docs/ARCHITECTURE.md       Deeper notes on scheduler & context-switch internals
 
 - **Cooperative only.** A task that never calls `os_sleep_ms()` or `os_yield()` will starve all other tasks.
 - **No stack isolation.** All tasks share the MSP stack; a stack overflow in one task corrupts the entire system.
-- **No priority.** Round-robin only — all tasks are treated equally.
+- **No priority.** Round-robin only - all tasks are treated equally.
 - **Single event waiter.** Each `OSEvent` supports only one waiting task at a time.
 - **Non-blocking queue.** `os_queue_send()` silently drops the message if the queue is full.
 - **No dynamic allocation.** All task slots and queue buffers are statically allocated at compile time.
@@ -222,4 +222,4 @@ This project was built with AI assistance (Claude, Anthropic), used for:
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT - see [LICENSE](LICENSE).
